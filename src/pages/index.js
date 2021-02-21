@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
+import { graphql } from "gatsby"
 import Img from "gatsby-image"
 
 import Layout from "../components/layout"
@@ -12,13 +12,9 @@ const IndexPage = ({ data }) => (
       return (
         <div key={doc.node.id}>
           <h1>{doc.node.Title} </h1>
+          <Img fluid={doc.node.image.childImageSharp.fluid} />
           <p>{doc.node.content} </p>
-          <p>
-            By {doc.node.author.username}{" "}
-            {doc.node.image.map(img => (
-              <img src={img.url} alt="" />
-            ))}
-          </p>
+          <p>By {doc.node.author.username}</p>
         </div>
       )
     })}
@@ -35,9 +31,12 @@ export const pageQuery = graphql`
           id
           content
           Title
-
           image {
-            url
+            childImageSharp {
+              fluid(maxWidth: 500) {
+                ...GatsbyImageSharpFluid
+              }
+            }
           }
           author {
             username
